@@ -22,7 +22,10 @@ def create_dynamic_countdown_ring(output_folder, duration, fps, resolution=(848,
 
     for frame_number in range(total_frames + 1):
         progress = frame_number / total_frames
-        angle = int(360 * (1 - progress))  # Calculate remaining angle
+        # Adjust the angles for 12 o'clock start and clockwise direction
+        start_angle = 270
+        end_angle = 270 + int(360 * progress)  # Clockwise progression
+
         seconds_left = duration - int(frame_number / fps)
 
         # Create a transparent upscaled image with alpha channel
@@ -37,13 +40,13 @@ def create_dynamic_countdown_ring(output_folder, duration, fps, resolution=(848,
 
         # Draw the dark gray transparent layer (depleted part of the ring, upscaled)
         cv2.ellipse(
-            image_upscaled, upscale_center, (upscale_radius, upscale_radius), 0, 0, 360, (151, 206, 33, 128), upscale_thickness
+            image_upscaled, upscale_center, (upscale_radius, upscale_radius), 0, 0, 360, (255, 255, 255, 255), upscale_thickness
         )
 
         # Draw the active progress ring (upscaled)
-        if angle > 0:
+        if int(360 * progress) > 0:  # Only draw if there is progress
             cv2.ellipse(
-                image_upscaled, upscale_center, (upscale_radius, upscale_radius), 0, 0, angle, (255, 255, 255, 255), upscale_thickness
+                image_upscaled, upscale_center, (upscale_radius, upscale_radius), 0, start_angle, end_angle, (151, 206, 33, 128), upscale_thickness
             )
 
         # Add the remaining seconds in the center of the ring (upscaled)
