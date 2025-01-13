@@ -1,0 +1,1 @@
+ffmpeg -r 30 -i no_timer_vid.mp4 -r 30 -i countdown_frames/frame_%04d.png -filter_complex "[0:v][1:v] overlay=0:0:shortest=1" -c:v libx264 -pix_fmt yuv420p output_video.mp4
